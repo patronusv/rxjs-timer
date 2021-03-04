@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { interval } from 'rxjs';
-import { map, takeWhile } from 'rxjs/operators';
+import { interval, fromEvent } from 'rxjs';
+import { map, takeWhile, bufferCount, filter } from 'rxjs/operators';
 
 import getTime from '../../helpers/helpers';
 import { timerContainer, btnContainer, timerBtn, timerClockface } from './Timer.module.css';
@@ -8,7 +8,6 @@ import { timerContainer, btnContainer, timerBtn, timerClockface } from './Timer.
 const Timer = () => {
   const [time, setTime] = useState(0);
   const [running, setRunning] = useState(false);
-  const [count, setCount] = useState(0);
 
   const timer$ = interval(1000).pipe(
     map(v => v + time),
@@ -25,12 +24,7 @@ const Timer = () => {
   };
 
   const pauseTimer = () => {
-    setRunning(!running);
-  };
-
-  const clickCounter = () => {
-    setCount(count => count + 1);
-    setTimeout(() => setCount(count => count - 1), 300);
+    setRunning(false);
   };
 
   const resetTimer = async () => {
@@ -47,11 +41,20 @@ const Timer = () => {
   }, [running]);
 
   useEffect(() => {
-    if (count === 2) {
-      pauseTimer();
-    }
-    // eslint-disable-next-line
-  }, [count]);
+    const btn = document.getElementById('waitBtn');
+    const clickNumber = 2;
+    const clickInterval = 300;
+    const click$ = fromEvent(btn, 'click')
+      .pipe(
+        map(() => new Date().getTime()),
+        bufferCount(clickNumber, 1),
+        filter(timestamps => {
+          return timestamps[0] > new Date().getTime() - clickInterval;
+        }),
+      )
+      .subscribe(pauseTimer);
+    return () => click$.unsubscribe();
+  }, []);
 
   return (
     <div className={timerContainer}>
@@ -59,7 +62,7 @@ const Timer = () => {
         <button onClick={running ? stopTimer : startTimer} className={timerBtn}>
           {running ? `STOP` : `START`}
         </button>
-        <button onClick={clickCounter} disabled={!running} className={timerBtn}>
+        <button disabled={!running} className={timerBtn} id="waitBtn">
           WAIT
         </button>
         <button onClick={resetTimer} disabled={!running} className={timerBtn}>
