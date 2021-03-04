@@ -21,12 +21,10 @@ const Timer = () => {
   const stopTimer = () => {
     setRunning(false);
     setTime(0);
-    setCount(0);
   };
 
   const pauseTimer = () => {
     setRunning(!running);
-    setCount(0);
   };
 
   const clickCounter = () => {
@@ -37,7 +35,6 @@ const Timer = () => {
   const resetTimer = async () => {
     await stopTimer();
     startTimer();
-    setCount(0);
   };
 
   useEffect(() => {
@@ -49,11 +46,9 @@ const Timer = () => {
   }, [running]);
 
   useEffect(() => {
+    console.log('count', count);
     if (count === 2) {
       pauseTimer();
-    }
-    if (count < 0) {
-      setCount(0);
     }
     // eslint-disable-next-line
   }, [count]);
