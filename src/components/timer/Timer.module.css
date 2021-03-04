@@ -1,0 +1,31 @@
+.timerContainer {
+  padding: 40px;
+  margin: 0 auto;
+}
+.btnContainer {
+  margin: 0 auto 30px;
+  display: flex;
+  justify-content: center;
+}
+.timerBtn {
+  width: calc(100% - 20px) / 3;
+  min-width: 100px;
+  padding: 5px 15px;
+  font-size: 20px;
+  border: 1px solid navy;
+  border-radius: 5px;
+  background-color: lightblue;
+  box-shadow: 1px 1px 7px 0px rgba(140, 140, 140, 0.75);
+}
+.timerBtn:not(:last-child) {
+  margin-right: 10px;
+}
+.timerBtn:hover,
+.timerBtn:focus {
+  background-color: yellowgreen;
+}
+.timerClockface {
+  width: max-content;
+  margin: 0 auto;
+  font-size: 50px;
+}

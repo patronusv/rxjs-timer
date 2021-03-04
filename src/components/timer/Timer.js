@@ -3,6 +3,7 @@ import { interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
 import getTime from '../../helpers/helpers';
+import { timerContainer, btnContainer, timerBtn, timerClockface } from './Timer.module.css';
 
 const Timer = () => {
   const [time, setTime] = useState(0);
@@ -46,7 +47,6 @@ const Timer = () => {
   }, [running]);
 
   useEffect(() => {
-    console.log('count', count);
     if (count === 2) {
       pauseTimer();
     }
@@ -54,15 +54,19 @@ const Timer = () => {
   }, [count]);
 
   return (
-    <div>
-      <button onClick={running ? stopTimer : startTimer}>{running ? `STOP` : `START`}</button>
-      <button onClick={clickCounter} disabled={!running}>
-        WAIT
-      </button>
-      <button onClick={resetTimer} disabled={!running}>
-        RESET
-      </button>
-      <p>
+    <div className={timerContainer}>
+      <div className={btnContainer}>
+        <button onClick={running ? stopTimer : startTimer} className={timerBtn}>
+          {running ? `STOP` : `START`}
+        </button>
+        <button onClick={clickCounter} disabled={!running} className={timerBtn}>
+          WAIT
+        </button>
+        <button onClick={resetTimer} disabled={!running} className={timerBtn}>
+          RESET
+        </button>
+      </div>
+      <p className={timerClockface}>
         {getTime(time).hours}:{getTime(time).minutes}:{getTime(time).seconds}
       </p>
     </div>
